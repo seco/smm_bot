@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Facebook\FileUpload\FacebookVideo;
 
 class Facebook extends Controller
 {
@@ -24,20 +25,42 @@ class Facebook extends Controller
 
             $res =  $this->fb->get('/me/accounts', $this->access_token);
             $res =  $res->getDecodedBody();
-            $i=0;
+//            $i=0;
             foreach ($res['data'] as $page){
                 $this->pages[] = [$page['name'], $page['access_token'], $page['id']];
-                echo $i."|".$page['name']." -- ".$page['access_token']." -- ".$page['id']."\n";
-                $i++;
+//                echo $i."|".$page['name']." -- ".$page['access_token']." -- ".$page['id']."\n";
+//                $i++;
             }
 
         }
     }
 
-    public function makePost($id){
-        $page = $this->pages[$id];
-        $arr = array('message' => 'Testing Post for our new tutorial. Graph API.');
+    public function makePost($pageId){
+        $page = $this->pages[$pageId];
+        $data = ['message' => 'Testing Post for our new tutorial. Graph API.'];
 
-        $this->fb->post($page[2].'/feed/', $arr,	$page[1]);
+        $this->fb->post($page[2].'/feed/', $data,	$page[1]);
+    }
+    public function makePostVideo($pageId,$videoId){
+        $page = $this->pages[$pageId];
+        // Upload a video for a user
+
+        $videoFile = "public\\video\\$videoId.mp4";
+//        var_dump($this->fb->videoToUpload($videoFile));
+        $data = [
+            'title' => 'My awesome video',
+            'description' => 'More info about my awesome video.',
+            'source' => $this->fb->videoToUpload($videoFile),
+        ];
+//
+        try {
+            $response = $this->fb->post($page[2].'/videos', $data,	$page[1]);
+        } catch(Facebook\Exceptions\FacebookSDKException $e) {
+            echo 'Error: ' . $e->getMessage();
+            exit;
+        }
+        $graphNode = $response->getGraphNode();
+
+        $videoId = $graphNode['id'];
     }
 }

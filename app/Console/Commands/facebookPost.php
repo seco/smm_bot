@@ -5,21 +5,21 @@ namespace App\Console\Commands;
 use App\Http\Controllers\Facebook;
 use Illuminate\Console\Command;
 
-class facebookTest extends Command
+class instagramPost extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'fb:t';
+    protected $signature = 'fb:post';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Facebook class tests';
+    protected $description = 'Facebook post command';
 
     /**
      * Create a new command instance.
@@ -40,7 +40,6 @@ class facebookTest extends Command
     public function handle()
     {
         //
-//        $this->fb->makePost(2);
         $this->fb->makePostVideo(2,3);
     }
 }
