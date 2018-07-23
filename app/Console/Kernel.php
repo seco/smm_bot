@@ -25,7 +25,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
          $schedule->command('ig:post')
-                  ->dailyAt('12:00');
+                  ->dailyAt('12:00')
+                  ->timezone('Europe/Kiev');
     }
 
     /**
